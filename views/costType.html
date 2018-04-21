@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>后台管理信息系统</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport' />
+		<% include ./components/scriptCSS.html %>
+		<% include ./components/scriptJS.html %>
+		<!--[if lt IE 9]>
+	    <script src='assets/javascripts/html5shiv.js' type='text/javascript'></script>
+	    <![endif]-->
+		<link rel="shortcut icon" href="/images/icon/favicon.ico">
+	</head>
+
+	<body>
+		<div class="main-wrap">
+			<% include ./components/leftMenu.html %>
+			<% include ./components/noScript.html %>
+			<div class="content-wrap">
+				<% include ./components/topBar.html %>
+				<main class="main-cont content mCustomScrollbar">
+					<!--开始::内容-->
+					<div class="page-wrap">
+						<section class="page-hd">
+							<header>
+								<h2 class="title"><i class="icon-table"></i>费用类型管理</h2>
+								<p class="title-description">
+									悉心管理，成就梦想。
+								</p>
+							</header>
+							<hr>
+						</section>
+					</div>
+					<div class="page-wrap">
+						<div class="">
+							<h3 class="">费用：&nbsp;&nbsp;&nbsp;&nbsp;0.3元/分钟</h3>
+						</div>
+						<br/>
+						<div class="">
+							<button class="btn btn-info JopenMaskPanel mr-10">点击修改</button>
+						</div>
+						<div class="mask"></div>
+										<div class="dialog">
+											<div class="dialog-hd">
+												<strong class="lt-title">修改费用</strong>
+												<a class="rt-operate icon-remove JclosePanel" title="关闭"></a>
+											</div>
+											<div class="dialog-bd">
+												<!--start::-->
+												<div class="form-group-col-2">
+													<div class="form-label">请设置费用：</div>
+													<div class="form-cont">
+														<input type="text" placeholder="请输入费用" class="form-control form-boxed">
+													</div>
+												</div>
+												<!--end::-->
+											</div>
+											<div class="dialog-ft">
+												<button class="btn btn-info JyesBtn">确认</button>
+												<button class="btn btn-secondary JnoBtn">关闭</button>
+											</div>
+										</div>
+					</div>
+					<!--开始::结束-->
+				</main>
+				<% include ./components/footer.html %>
+			</div>
+		</div>
+	</body>
+
+</html>

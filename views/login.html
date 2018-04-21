@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title>登录-后台管理系统</title>
+<link rel="icon" href="images/icon/favicon.ico" type="image/x-icon">
+<% include ./components/scriptCSS.html %>
+<% include ./components/scriptJS.html %>
+<script src="javascript/pages/login.js"></script>
+</head>
+<body style="background-image: url(./images/bg.jpg);">
+	<section class="login-contain">
+		<header>
+			<h1>后台管理信息系统</h1>
+			<p>management system</p>
+		</header>
+		<div class="form-content">
+			<ul>
+				<li>
+					<div class="form-group">
+						<label class="control-label">管理员账号：</label>
+						<input type="text" placeholder="username" class="form-control form-underlined" id="adminName"/>
+					</div>
+				</li>
+				<li>
+					<div class="form-group">
+						<label class="control-label">管理员密码：</label>
+						<input type="password" placeholder="password" class="form-control form-underlined" id="adminPwd"/>
+					</div>
+				</li>
+				<li>
+					<label class="check-box">
+						<input type="checkbox" name="remember"/>
+						<span>记住账号密码</span>
+					</label>
+					<label class="check-box">
+						<a href="loginRePwd">忘记密码</a>
+					</label>
+				</li>
+				<li>
+					<button class="btn btn-lg btn-block" id="entry">立即登录</button>
+				</li>
+			</ul>
+		</div>
+	</section>
+<div class="mask"></div>
+<div class="dialog">
+	<div class="dialog-hd">
+		<strong class="lt-title">标题</strong>
+		<a class="rt-operate icon-remove JclosePanel" title="关闭"></a>
+	</div>
+	<div class="dialog-bd">
+		<!--start::-->
+		<p>这里是基础弹窗,可以定义文本信息，HTML信息这里是基础弹窗,可以定义文本信息，HTML信息。</p>
+		<!--end::-->
+	</div>
+	<div class="dialog-ft">
+		<button class="btn btn-info JyesBtn">确认</button>
+		<button class="btn btn-secondary JnoBtn">关闭</button>
+	</div>
+</div>
+</body>
+</html>
