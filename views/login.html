@@ -19,13 +19,13 @@
 				<li>
 					<div class="form-group">
 						<label class="control-label">管理员账号：</label>
-						<input type="text" placeholder="username" class="form-control form-underlined" id="adminName"/>
+						<input type="text" placeholder="username" class="form-control form-underlined" id="username"/>
 					</div>
 				</li>
 				<li>
 					<div class="form-group">
 						<label class="control-label">管理员密码：</label>
-						<input type="password" placeholder="password" class="form-control form-underlined" id="adminPwd"/>
+						<input type="password" placeholder="password" class="form-control form-underlined" id="password"/>
 					</div>
 				</li>
 				<li>
@@ -38,26 +38,38 @@
 					</label>
 				</li>
 				<li>
-					<button class="btn btn-lg btn-block" id="entry">立即登录</button>
+					<button class="btn btn-lg btn-block" id="loginBut">立即登录</button>
 				</li>
 			</ul>
 		</div>
 	</section>
-<div class="mask"></div>
-<div class="dialog">
-	<div class="dialog-hd">
-		<strong class="lt-title">标题</strong>
-		<a class="rt-operate icon-remove JclosePanel" title="关闭"></a>
-	</div>
-	<div class="dialog-bd">
-		<!--start::-->
-		<p>这里是基础弹窗,可以定义文本信息，HTML信息这里是基础弹窗,可以定义文本信息，HTML信息。</p>
-		<!--end::-->
-	</div>
-	<div class="dialog-ft">
-		<button class="btn btn-info JyesBtn">确认</button>
-		<button class="btn btn-secondary JnoBtn">关闭</button>
-	</div>
-</div>
+<script type="text/javascript">
+       $(function(){
+	        $("#loginBut").click(function(){
+		    	var params ={
+	    			username: $("#username").val(),
+	    			password: $("#password").val(),
+	    			token:"manage"
+	    		};
+		    	$.ajax({
+				    url:'http://localhost:9001/security/login',
+				    type:'post',
+				    async:false,//同步：意思是当有返回值以后才会进行后面的js程序。
+				    dataType:'text',
+				    data: JSON.stringify(params),
+				    success: function(data){
+				        var userAllInfo=$.parseJSON(data);
+				        var loginEntity=userAllInfo["loginEntity"];
+				        var sessionId=loginEntity["id"];
+				        $.session.set(JSON.stringify(sessionId),JSON.stringify(loginEntity));
+				        window.location.href = '/index';
+				    },
+				    error: function(res){
+		            	alert("登录失败");
+		            }
+				});
+    	});
+	});
+    </script>
 </body>
 </html>
