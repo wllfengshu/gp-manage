@@ -43,7 +43,7 @@
 			</ul>
 		</div>
 	</section>
-<script type="text/javascript">
+	<script type="text/javascript">
        $(function(){
 	        $("#loginBut").click(function(){
 		    	var params ={
@@ -60,16 +60,15 @@
 				    success: function(data){
 				        var userAllInfo=$.parseJSON(data);
 				        var loginEntity=userAllInfo["loginEntity"];
-				        var sessionId=loginEntity["id"];
-				        $.session.set(JSON.stringify(sessionId),JSON.stringify(loginEntity));
+				        $.session.set("loginUserAllInfo",JSON.stringify(loginEntity));
 				        window.location.href = '/index';
 				    },
 				    error: function(res){
 		            	alert("登录失败");
 		            }
 				});
-    	});
-	});
+    		});
+		});
     </script>
 </body>
 </html>

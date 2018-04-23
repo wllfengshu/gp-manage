@@ -14,7 +14,7 @@
 				<a><i class="icon-random"></i>清除缓存</a>
 			</li>
 			<li>
-				<a><i class="icon-user"></i>管理员:<em>DeathGhost</em></a>
+				<a><i class="icon-user"></i>管理员:<em id="login_name">管理员</em></a>
 			</li>
 			<li>
 				<a><i class="icon-bell-alt"></i>系统消息</a>
@@ -24,4 +24,17 @@
 			</li>
 		</ul>
 	</div>
+	<script type="text/javascript">
+       $(function(){
+	       	/**
+	       	 * $.parseJSON(str);//字符串转对象
+	       	 * JSON.stringify(obj);//对象转字符串
+	       	 */
+	   		var userAllInfo=$.session.get("loginUserAllInfo");
+	   		var userAllInfoJson=$.parseJSON(userAllInfo);
+	        var user=userAllInfoJson["user"];//返回的还是一个json对象
+	        var login_name=user["login_name"];
+	        $("#login_name").html(login_name);
+       });
+    </script>
 </header>
