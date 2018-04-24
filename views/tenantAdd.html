@@ -125,7 +125,7 @@
 		    			people_num: $("#people_num").val(),
 		    			token:"manage"
 		    		};
-		    		var userAllInfo=$.session.get("loginUserAllInfo");
+		    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
 			   		var userAllInfoJson=$.parseJSON(userAllInfo);
 			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
 			        var user=userAllInfoJson["user"];

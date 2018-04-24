@@ -55,7 +55,7 @@
 								<td>
 									<div class="form-group-col-2">
 										&nbsp;&nbsp;
-										<input id="tenantQueryBut"  @change="changeOverlay" type="button" class="btn btn-warning" value="查询">
+										<input id="queryBut"  @change="changeOverlay" type="button" class="btn btn-warning" value="查询">
 									</div>
 								</td>
 							</tr>
@@ -120,7 +120,7 @@
 	       			}
 	       			return strTemp;
 	       		}
-		        $("#tenantQueryBut").click(function(){
+		        $("#queryBut").click(function(){
 			    	var params ={
 		    			domain: $("#domain").val(),
 		    			company_name: $("#company_name").val(),
@@ -129,7 +129,7 @@
 		    			token:"manage"
 		    		};
 		    		var paramsGetStr="?"+spliceGetStr(params);
-		    		var userAllInfo=$.session.get("loginUserAllInfo");
+		    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
 			   		var userAllInfoJson=$.parseJSON(userAllInfo);
 			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
 			        var user=userAllInfoJson["user"];
@@ -144,8 +144,8 @@ var vm = new Vue({
     data: {
       items : [],
       //分页参数
-      pageAll:0, //总页数,根据服务端返回total值计算
-      perPage:10 //每页数量
+//    pageAll:0, //总页数,根据服务端返回total值计算
+//    perPage:10 //每页数量
     },
     methods: {
       loadList:function(page){
@@ -160,8 +160,8 @@ var vm = new Vue({
             	var infoRes=$.parseJSON(res);//返回的数据，包含时间戳等
 				var infoData=infoRes["data"];//取到data
               that.items = infoData;
-              that.perPage = res.data.perPage;
-              that.pageAll = Math.ceil(res.data.total / that.perPage);//计算总页数
+//            that.perPage = res.data.perPage;
+//            that.pageAll = Math.ceil(res.data.total / that.perPage);//计算总页数
           }
         });
       },

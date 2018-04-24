@@ -19,7 +19,7 @@
 				<li>
 					<div class="form-group">
 						<label class="control-label">管理员账号：</label>
-						<input type="text" placeholder="username" class="form-control form-underlined" id="username"/>
+						<input type="number" placeholder="username" class="form-control form-underlined" id="username"/>
 					</div>
 				</li>
 				<li>
@@ -60,7 +60,7 @@
 				    success: function(data){
 				        var userAllInfo=$.parseJSON(data);
 				        var loginEntity=userAllInfo["loginEntity"];
-				        $.session.set("loginUserAllInfo",JSON.stringify(loginEntity));
+				        $.session.set("loginUserAllInfo_manage",JSON.stringify(loginEntity));
 				        window.location.href = '/index';
 				    },
 				    error: function(res){

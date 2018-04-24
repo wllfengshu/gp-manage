@@ -14,7 +14,7 @@
 				<a><i class="icon-random"></i>清除缓存</a>
 			</li>
 			<li>
-				<a><i class="icon-user"></i>管理员:<em id="login_name">管理员</em></a>
+				<a><i class="icon-user"></i>管理员:<em id="login_name">默认值</em></a>
 			</li>
 			<li>
 				<a><i class="icon-bell-alt"></i>系统消息</a>
@@ -25,7 +25,7 @@
 		</ul>
 	</div>
 	<div id="messageTitle" style="position: absolute; z-index: 99;text-align:center;width: 80%;" class="animated bounceInDown">
-		<p v-if="show" style="background-color: #FF1111;">{{ message }}</p>
+		<p v-if="show" style="background-color: #FF1111;">登录超时，请重新登录</p>
 	</div>
 	<script type="text/javascript">
        $(function(){
@@ -33,7 +33,7 @@
 	       	 * $.parseJSON(str);//字符串转对象
 	       	 * JSON.stringify(obj);//对象转字符串
 	       	 */
-	   		var userAllInfo=$.session.get("loginUserAllInfo");
+	   		var userAllInfo=$.session.get("loginUserAllInfo_manage");
 	   		if (typeof(userAllInfo) == "undefined" ) {
 	   			window.location.href = '/login';
 	   		}

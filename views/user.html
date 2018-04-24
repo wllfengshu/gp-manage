@@ -40,52 +40,23 @@
 									<div class="panel-bd">
 										<form class="form-horizontal">
 											<div class="">
-												<h3 class="">姓名：&nbsp;&nbsp;&nbsp;&nbsp;WLL</h3>
+												<h3>昵称：&nbsp;&nbsp;&nbsp;&nbsp;<strong id="_login_name">默认值</strong></h3>
 											</div>
 											<br/>
 											<hr style="height:1px;border:none;border-top:1px dashed #0066CC; opacity: 0.4;">
 											<br/>
 											<div class="">
-												<h3 class="">昵称：&nbsp;&nbsp;&nbsp;&nbsp;天地炫舞</h3>
+												<h3>账号：&nbsp;&nbsp;&nbsp;&nbsp;<strong id="_username">默认值</strong></h3>
 											</div>
 											<br/>
 											<hr style="height:1px;border:none;border-top:1px dashed #0066CC; opacity: 0.4;">
 											<br/>
 											<div class="">
-												<h3 class="">账号：&nbsp;&nbsp;&nbsp;&nbsp;13612345678</h3>
+												<h3>邮箱：&nbsp;&nbsp;&nbsp;&nbsp;<strong id="_email">默认值</strong></h3>
 											</div>
+											<hr style="height:1px;border:none;border-top:1px dashed #0066CC; opacity: 0.4;">
 											<br/>
-											<!--<div class="">
-												<button class="btn btn-info JopenMaskPanel mr-10">点击修改</button>
-											</div>-->
 										</form>
-										<div class="mask"></div>
-										<div class="dialog">
-											<div class="dialog-hd">
-												<strong class="lt-title">修改帐户信息</strong>
-												<a class="rt-operate icon-remove JclosePanel" title="关闭"></a>
-											</div>
-											<div class="dialog-bd">
-												<!--start::-->
-												<div class="form-group-col-2">
-													<div class="form-label">姓名：</div>
-													<div class="form-cont">
-														<input type="text" placeholder="请输入姓名" class="form-control form-boxed">
-													</div>
-												</div>
-												<div class="form-group-col-2">
-													<div class="form-label">昵称：</div>
-													<div class="form-cont">
-														<input type="text" placeholder="请输入昵称" class="form-control form-boxed">
-													</div>
-												</div>
-												<!--end::-->
-											</div>
-											<div class="dialog-ft">
-												<button class="btn btn-info JyesBtn">确认</button>
-												<button class="btn btn-secondary JnoBtn">关闭</button>
-											</div>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -96,6 +67,19 @@
 				<% include ./components/footer.html %>
 			</div>
 		</div>
+		<script type="text/javascript">
+	       $(function(){
+	    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
+		   		var userAllInfoJson=$.parseJSON(userAllInfo);
+		        var user=userAllInfoJson["user"];
+		        var login_name=user["login_name"];
+		        var username=user["username"];
+	    		var email=user["email"];
+	    		$("#_login_name").html(login_name);
+	    		$("#_username").html(username);
+	    		$("#_email").html(email);
+			});
+	    </script>
 	</body>
 
 </html>

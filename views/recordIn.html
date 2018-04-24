@@ -59,9 +59,15 @@
 										</div>
 									</div>
 								</td>
+								<td>
+									<div class="form-group-col-2">
+										&nbsp;&nbsp;
+										<input id="queryBut"  @change="changeOverlay" type="button" class="btn btn-warning" value="查询">
+									</div>
+								</td>
 							</tr>
 						</table>
-						<table class="table table-bordered  mb-15">
+						<table  id="havaTable"   class="table table-bordered  mb-15">
 							<thead>
 								<tr>
 									<th>编号</th>
@@ -76,21 +82,23 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="cen">
-									<td>1</td>
-									<td>艾科技</td>
-									<td>test.com</td>
-									<td>小艾</td>
-									<td>13612345678</td>
-									<td>5001</td>
-									<td>2018.04.01 19:10:15</td>
-									<td>17s</td>
-									<td>
-										<a title="编辑" class="mr-5">编辑</a>
-										<a title="详情" class="mr-5">详情</a>
-										<a title="删除">删除</a>
-									</td>
-								</tr>
+								<template>
+									<tr v-for="todo in items"   class="cen">
+										<td>todo.id</td>
+										<td>todo.ani</td>
+										<td>todo.call_type_name</td>
+										<td></td>
+										<td>13612345678</td>
+										<td>5001</td>
+										<td>2018.04.01 19:10:15</td>
+										<td>17s</td>
+										<td>
+											<a title="编辑" class="mr-5">编辑</a>
+											<a title="详情" class="mr-5">详情</a>
+											<a title="删除">删除</a>
+										</td>
+									</tr>
+								</template>
 							</tbody>
 						</table>
 						<div class="panel-bd">
@@ -102,6 +110,73 @@
 				<% include ./components/footer.html %>
 			</div>
 		</div>
+		<script type="text/javascript">
+	       $(function(){
+	       		function showMessage(state,mes){//使用vue.js弹出提示框
+	       			new Vue({
+		   				el:"#messageTitle",
+		   				data:{
+		   					show:state,
+		   					message:mes
+		   				}
+		   			});
+	       		}
+	       		function spliceGetStr(params){//拼接get请求
+	       			var strTemp="";
+	       			for (var variable in params) {
+	       				strTemp+=variable+"="+params[variable]+"&"
+	       			}
+	       			if(strTemp.length>0){
+	       				strTemp=strTemp.substr(0,strTemp.length-1);
+	       			}
+	       			return strTemp;
+	       		}
+		        $("#queryBut").click(function(){
+			    	var params ={
+		    			domain: $("#domain").val(),
+		    			company_name: $("#company_name").val(),
+		    			pageNo:1,
+		    			pageSize:99,
+		    			token:"manage"
+		    		};
+		    		var paramsGetStr="?"+spliceGetStr(params);
+		    		var userAllInfo=$.session.get("loginUserAllInfo");
+			   		var userAllInfoJson=$.parseJSON(userAllInfo);
+			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
+			        var user=userAllInfoJson["user"];
+			        var user_id=user["id"];
+		    		var _headers= {
+						"sessionId":sessionId,
+						"user_id":user_id
+					}
+
+			    	$.ajax({
+					    url:'http://localhost:7000/tenant/'+paramsGetStr,
+					    type:'get',
+					    dataType:'text',
+					    headers:_headers,
+					    success: function(_data){
+					    	var infoRes=$.parseJSON(_data);//返回的数据，包含时间戳等
+				        	var infoData=infoRes["data"];//取到data
+				        	if(infoData==""){
+				        		alert("查询为空");
+				        	}else{
+				        		new Vue({
+					   				el:"#havaTable",
+					   				data:{
+					   					todos:infoData
+					   				}
+					   			});
+				        	}
+					    },
+					    error: function(res){
+					    	showMessage(true,"查询失败");
+			            	alert("查询失败");
+			            }
+					});
+	    		});
+			});
+	    </script>
 	</body>
 
 </html>
