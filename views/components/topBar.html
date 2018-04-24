@@ -24,6 +24,9 @@
 			</li>
 		</ul>
 	</div>
+	<div id="messageTitle" style="position: absolute; z-index: 99;text-align:center;width: 80%;" class="animated bounceInDown">
+		<p v-if="show" style="background-color: #FF1111;">{{ message }}</p>
+	</div>
 	<script type="text/javascript">
        $(function(){
 	       	/**
@@ -31,6 +34,13 @@
 	       	 * JSON.stringify(obj);//对象转字符串
 	       	 */
 	   		var userAllInfo=$.session.get("loginUserAllInfo");
+	   		if (typeof(userAllInfo) == "undefined" ) {
+	   			window.location.href = '/login';
+	   		}
+	   		new Vue({
+   				el:"#messageTitle",
+   				data:{show:false}
+   			});
 	   		var userAllInfoJson=$.parseJSON(userAllInfo);
 	        var user=userAllInfoJson["user"];//返回的还是一个json对象
 	        var login_name=user["login_name"];

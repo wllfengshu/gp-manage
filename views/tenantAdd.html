@@ -104,6 +104,15 @@
 		</div>
 		<script type="text/javascript">
 	       $(function(){
+	       		function showMessage(state,mes){//使用vue.js
+	       			new Vue({
+		   				el:"#messageTitle",
+		   				data:{
+		   					show:state,
+		   					message:mes
+		   				}
+		   			});
+	       		}
 		        $("#tenantAddBut").click(function(){
 			    	var params ={
 		    			applicant: $("#applicant").val(),
@@ -111,7 +120,6 @@
 		    			company_name: $("#company_name").val(),
 		    			company_type: $("#company_type").val(),
 		    			territory: $("#territory").val(),
-		    			status: "1",
 		    			url: $("#url").val(),
 		    			ceo: $("#ceo").val(),
 		    			people_num: $("#people_num").val(),
@@ -120,21 +128,24 @@
 		    		var userAllInfo=$.session.get("loginUserAllInfo");
 			   		var userAllInfoJson=$.parseJSON(userAllInfo);
 			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
-		    		alert(sessionId);
+			        var user=userAllInfoJson["user"];
+			        var user_id=user["id"];
 		    		var _headers= {
-						"sessionId":sessionId
+						"sessionId":sessionId,
+						"user_id":user_id
 					}
 			    	$.ajax({
 					    url:'http://localhost:7000/tenant/',
 					    type:'post',
-					    async:false,//同步：意思是当有返回值以后才会进行后面的js程序。
 					    dataType:'text',
 					    data: JSON.stringify(params),
 					    headers:_headers,
 					    success: function(data){
-					        alert("添加成功");
+					    	showMessage(true,"添加成功");
+					        $(".form-control").val("");//清空输入框
 					    },
 					    error: function(res){
+					    	showMessage(true,"添加失败");
 			            	alert("添加失败");
 			            }
 					});

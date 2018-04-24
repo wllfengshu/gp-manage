@@ -40,21 +40,27 @@
 									<div class="form-group-col-2">
 										<div class="form-label">企业名称：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入企业名称" class="form-control form-boxed">
+											<input id="company_name" type="text" placeholder="请输入企业名称" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="form-group-col-2">
-										<div class="form-label">公司域名：</div>
+										<div class="form-label">企业域名：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入公司域名" class="form-control form-boxed">
+											<input id="domain" type="text" placeholder="请输入企业域名" class="form-control form-boxed">
 										</div>
+									</div>
+								</td>
+								<td>
+									<div class="form-group-col-2">
+										&nbsp;&nbsp;
+										<input id="tenantQueryBut"  @change="changeOverlay" type="button" class="btn btn-warning" value="查询">
 									</div>
 								</td>
 							</tr>
 						</table>
-						<table class="table table-bordered  mb-15">
+						<table  id="havaTable"  class="table table-bordered  mb-15">
 							<thead>
 								<tr>
 									<th>编号</th>
@@ -67,19 +73,21 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="cen">
-									<td>1</td>
-									<td>艾科技</td>
-									<td>民营</td>
-									<td>IT研发</td>
-									<td>test.com</td>
-									<td></td>
-									<td>
-										<a title="编辑" class="mr-5">编辑</a>
-										<a title="详情" class="mr-5">详情</a>
-										<a title="删除">删除</a>
-									</td>
-								</tr>
+								<template>
+									<tr v-for="todo in items"  class="cen">
+										<td v-text="todo.id"></td>
+										<td v-text="todo.company_name"></td>
+										<td v-text="todo.company_type"></td>
+										<td v-text="todo.territory"></td>
+										<td v-text="todo.domain"></td>
+										<td v-text="todo.applicant"></td>
+										<td>
+											<a title="编辑" class="mr-5">编辑</a>
+											<a title="详情" class="mr-5">详情</a>
+											<a title="删除">删除</a>
+										</td>
+									</tr>
+								</template>
 							</tbody>
 						</table>
 						<div class="panel-bd">
@@ -91,6 +99,113 @@
 				<% include ./components/footer.html %>
 			</div>
 		</div>
+		<script type="text/javascript">
+	       $(function(){
+	       		function showMessage(state,mes){//使用vue.js弹出提示框
+	       			new Vue({
+		   				el:"#messageTitle",
+		   				data:{
+		   					show:state,
+		   					message:mes
+		   				}
+		   			});
+	       		}
+	       		function spliceGetStr(params){//拼接get请求
+	       			var strTemp="";
+	       			for (var variable in params) {
+	       				strTemp+=variable+"="+params[variable]+"&"
+	       			}
+	       			if(strTemp.length>0){
+	       				strTemp=strTemp.substr(0,strTemp.length-1);
+	       			}
+	       			return strTemp;
+	       		}
+		        $("#tenantQueryBut").click(function(){
+			    	var params ={
+		    			domain: $("#domain").val(),
+		    			company_name: $("#company_name").val(),
+		    			pageNo:1,
+		    			pageSize:99,
+		    			token:"manage"
+		    		};
+		    		var paramsGetStr="?"+spliceGetStr(params);
+		    		var userAllInfo=$.session.get("loginUserAllInfo");
+			   		var userAllInfoJson=$.parseJSON(userAllInfo);
+			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
+			        var user=userAllInfoJson["user"];
+			        var user_id=user["id"];
+		    		var _headers= {
+						"sessionId":sessionId,
+						"user_id":user_id
+					}
+
+var vm = new Vue({
+    el: "#havaTable",
+    data: {
+      items : [],
+      //分页参数
+      pageAll:0, //总页数,根据服务端返回total值计算
+      perPage:10 //每页数量
+    },
+    methods: {
+      loadList:function(page){
+        var that = this;
+        $.ajax({
+          url:'http://localhost:7000/tenant/'+paramsGetStr,
+		  type:'get',
+		  dataType:'text',
+		  headers:_headers,
+          error:function(){alert('请求列表失败')},
+          success:function(res){
+            	var infoRes=$.parseJSON(res);//返回的数据，包含时间戳等
+				var infoData=infoRes["data"];//取到data
+              that.items = infoData;
+              that.perPage = res.data.perPage;
+              that.pageAll = Math.ceil(res.data.total / that.perPage);//计算总页数
+          }
+        });
+      },
+      //初始化
+      init:function(){
+        this.loadList(1);
+      }
+    }
+  });
+  vm.init();
+
+//
+//
+//			    	$.ajax({
+//					    url:'http://localhost:7000/tenant/'+paramsGetStr,
+//					    type:'get',
+//					    dataType:'text',
+//					    headers:_headers,
+//					    success: function(_data){
+//					    	var infoRes=$.parseJSON(_data);//返回的数据，包含时间戳等
+//				        	var infoData=infoRes["data"];//取到data
+//				        	if(infoData==""){
+//				        		alert("查询为空");
+//				        	}else{
+//				        		new Vue({
+//					   				el:"#havaTable",
+//					   				data:{
+//					   					todos:infoData
+//					   				},
+//					   				created: function () {
+//					   					
+//					   				}
+//					   				
+//					   			});
+//				        	}
+//					    },
+//					    error: function(res){
+//					    	showMessage(true,"查询失败");
+//			            	alert("查询失败");
+//			            }
+//					});
+	    		});
+			});
+	    </script>
 	</body>
 
 </html>
