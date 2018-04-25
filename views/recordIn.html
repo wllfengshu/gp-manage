@@ -112,15 +112,6 @@
 		</div>
 		<script type="text/javascript">
 	       $(function(){
-	       		function showMessage(state,mes){//使用vue.js弹出提示框
-	       			new Vue({
-		   				el:"#messageTitle",
-		   				data:{
-		   					show:state,
-		   					message:mes
-		   				}
-		   			});
-	       		}
 	       		function spliceGetStr(params){//拼接get请求
 	       			var strTemp="";
 	       			for (var variable in params) {
@@ -133,25 +124,25 @@
 	       		}
 		        $("#queryBut").click(function(){
 			    	var params ={
-		    			domain: $("#domain").val(),
-		    			company_name: $("#company_name").val(),
+		    			_ani: $("#_ani").val(),
+		    			_dnis: $("#_dnis").val(),
 		    			pageNo:1,
 		    			pageSize:99,
 		    			token:"manage"
 		    		};
 		    		var paramsGetStr="?"+spliceGetStr(params);
-		    		var userAllInfo=$.session.get("loginUserAllInfo");
+		    		var userAllInfo=$.session.get("loginUserAllInfo_crm");
 			   		var userAllInfoJson=$.parseJSON(userAllInfo);
 			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
 			        var user=userAllInfoJson["user"];
 			        var user_id=user["id"];
 		    		var _headers= {
 						"sessionId":sessionId,
-						"user_id":user_id
+						"user_id":user_id,
+						"call_type":"0"
 					}
-
 			    	$.ajax({
-					    url:'http://localhost:7000/tenant/'+paramsGetStr,
+					    url:'http://localhost:7006/record/'+paramsGetStr,
 					    type:'get',
 					    dataType:'text',
 					    headers:_headers,
@@ -170,7 +161,6 @@
 				        	}
 					    },
 					    error: function(res){
-					    	showMessage(true,"查询失败");
 			            	alert("查询失败");
 			            }
 					});
