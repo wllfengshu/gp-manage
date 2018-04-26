@@ -39,7 +39,7 @@
 									<div class="form-group-col-2">
 										<div class="form-label">公司域名：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入公司域名" class="form-control form-boxed">
+											<input id="domain" type="text" placeholder="请输入公司域名" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
@@ -47,7 +47,7 @@
 									<div class="form-group-col-2">
 										<div class="form-label">坐席工号：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入坐席工号" class="form-control form-boxed">
+											<input id="_ani" type="text" placeholder="请输入坐席工号" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
@@ -55,42 +55,47 @@
 									<div class="form-group-col-2">
 										<div class="form-label">顾客电话：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入顾客电话" class="form-control form-boxed">
+											<input id="_dnis" type="text" placeholder="请输入顾客电话" class="form-control form-boxed">
 										</div>
+									</div>
+								</td>
+								<td>
+									<div class="form-group-col-2">
+										&nbsp;&nbsp;
+										<input id="queryBut" type="button" class="btn btn-warning" value="查询">
 									</div>
 								</td>
 							</tr>
 						</table>
-						<table class="table table-bordered  mb-15">
+						<table  id="havaTable"   class="table table-bordered  mb-15">
 							<thead>
 								<tr>
 									<th>编号</th>
 									<th>公司名称</th>
 									<th>公司域名</th>
-									<th>顾客姓名</th>
 									<th>顾客电话</th>
 									<th>坐席工号</th>
 									<th>呼出时间</th>
-									<th>通话时长</th>
+									<th>结束时间</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
-								<tr class="cen">
-									<td>1</td>
-									<td>艾科技</td>
-									<td>test.com</td>
-									<td>小加</td>
-									<td>13612345677</td>
-									<td>5001</td>
-									<td>2018.04.01 19:10:23</td>
-									<td>21s</td>
-									<td>
-										<a title="编辑" class="mr-5">编辑</a>
-										<a title="详情" class="mr-5">详情</a>
-										<a title="删除">删除</a>
-									</td>
-								</tr>
+								<template>
+									<tr v-for="todo in todos"   class="cen">
+										<td v-text="todo.id"></td>
+										<td v-text="todo.company_name"></td>
+										<td v-text="todo.domain"></td>
+										<td v-text="todo.dnis"></td>
+										<td v-text="todo.ani"></td>
+										<td v-text="todo.begin_time"></td>
+										<td v-text="todo.end_time"></td>
+										<td>
+											<a title="详情" class="mr-5">详情</a>
+											<a title="删除">删除</a>
+										</td>
+									</tr>
+								</template>
 							</tbody>
 						</table>
 						<div class="panel-bd">
@@ -102,6 +107,66 @@
 				<% include ./components/footer.html %>
 			</div>
 		</div>
+		<script type="text/javascript">
+	       $(function(){
+	       		function spliceGetStr(params){//拼接get请求
+	       			var strTemp="";
+	       			for (var variable in params) {
+	       				strTemp+=variable+"="+params[variable]+"&"
+	       			}
+	       			if(strTemp.length>0){
+	       				strTemp=strTemp.substr(0,strTemp.length-1);
+	       			}
+	       			return strTemp;
+	       		}
+		        $("#queryBut").click(function(){
+			    	var params ={
+			    		domain: $("#domain").val(),
+		    			ani: $("#_ani").val(),
+		    			dnis: $("#_dnis").val(),
+		    			pageNo:1,
+		    			pageSize:10,
+		    			token:"manage"
+		    		};
+		    		var paramsGetStr="?"+spliceGetStr(params);
+		    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
+			   		var userAllInfoJson=$.parseJSON(userAllInfo);
+			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
+			        var user=userAllInfoJson["user"];
+			        var user_id=user["id"];
+			        var tenant_id=user["tenant_id"];
+		    		var _headers= {
+						"sessionId":sessionId,
+						"user_id":user_id,
+						"tenant_id":tenant_id,
+						"call_type":"1"
+					}
+			    	$.ajax({
+					    url:'http://localhost:7006/record/'+paramsGetStr,
+					    type:'get',
+					    dataType:'text',
+					    headers:_headers,
+					    success: function(_data){
+					    	var infoRes=$.parseJSON(_data);//返回的数据，包含时间戳等
+				        	var infoData=infoRes["data"];//取到data
+				        	if(infoData==""){
+				        		alert("查询为空");
+				        	}else{
+				        		new Vue({
+					   				el:"#havaTable",
+					   				data:{
+					   					todos:infoData
+					   				}
+					   			});
+				        	}
+					    },
+					    error: function(res){
+			            	alert("查询失败");
+			            }
+					});
+	    		});
+			});
+	    </script>
 	</body>
 
 </html>

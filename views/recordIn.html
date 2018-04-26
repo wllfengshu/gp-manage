@@ -39,7 +39,7 @@
 									<div class="form-group-col-2">
 										<div class="form-label">公司域名：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入公司域名" class="form-control form-boxed">
+											<input id="domain" type="text" placeholder="请输入公司域名" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
@@ -47,7 +47,7 @@
 									<div class="form-group-col-2">
 										<div class="form-label">坐席工号：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入坐席工号" class="form-control form-boxed">
+											<input id="_ani" type="text" placeholder="请输入坐席工号" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
@@ -55,14 +55,14 @@
 									<div class="form-group-col-2">
 										<div class="form-label">顾客电话：</div>
 										<div class="form-cont">
-											<input type="text" placeholder="请输入顾客电话" class="form-control form-boxed">
+											<input id="_dnis" type="text" placeholder="请输入顾客电话" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="form-group-col-2">
 										&nbsp;&nbsp;
-										<input id="queryBut"  @change="changeOverlay" type="button" class="btn btn-warning" value="查询">
+										<input id="queryBut" type="button" class="btn btn-warning" value="查询">
 									</div>
 								</td>
 							</tr>
@@ -73,27 +73,24 @@
 									<th>编号</th>
 									<th>公司名称</th>
 									<th>公司域名</th>
-									<th>顾客姓名</th>
 									<th>顾客电话</th>
 									<th>坐席工号</th>
 									<th>呼入时间</th>
-									<th>通话时长</th>
+									<th>结束时间</th>
 									<th>操作</th>
 								</tr>
 							</thead>
 							<tbody>
 								<template>
-									<tr v-for="todo in items"   class="cen">
-										<td>todo.id</td>
-										<td>todo.ani</td>
-										<td>todo.call_type_name</td>
-										<td></td>
-										<td>13612345678</td>
-										<td>5001</td>
-										<td>2018.04.01 19:10:15</td>
-										<td>17s</td>
+									<tr v-for="todo in todos"   class="cen">
+										<td v-text="todo.id"></td>
+										<td v-text="todo.company_name"></td>
+										<td v-text="todo.domain"></td>
+										<td v-text="todo.ani"></td>
+										<td v-text="todo.dnis"></td>
+										<td v-text="todo.begin_time"></td>
+										<td v-text="todo.end_time"></td>
 										<td>
-											<a title="编辑" class="mr-5">编辑</a>
 											<a title="详情" class="mr-5">详情</a>
 											<a title="删除">删除</a>
 										</td>
@@ -124,21 +121,24 @@
 	       		}
 		        $("#queryBut").click(function(){
 			    	var params ={
-		    			_ani: $("#_ani").val(),
-		    			_dnis: $("#_dnis").val(),
+			    		domain: $("#domain").val(),
+		    			ani: $("#_ani").val(),
+		    			dnis: $("#_dnis").val(),
 		    			pageNo:1,
-		    			pageSize:99,
+		    			pageSize:10,
 		    			token:"manage"
 		    		};
 		    		var paramsGetStr="?"+spliceGetStr(params);
-		    		var userAllInfo=$.session.get("loginUserAllInfo_crm");
+		    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
 			   		var userAllInfoJson=$.parseJSON(userAllInfo);
 			        var sessionId=userAllInfoJson["id"];//返回的还是一个json对象
 			        var user=userAllInfoJson["user"];
 			        var user_id=user["id"];
+			        var tenant_id=user["tenant_id"];
 		    		var _headers= {
 						"sessionId":sessionId,
 						"user_id":user_id,
+						"tenant_id":tenant_id,
 						"call_type":"0"
 					}
 			    	$.ajax({
