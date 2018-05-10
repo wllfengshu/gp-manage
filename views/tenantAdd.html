@@ -84,7 +84,13 @@
 											<div class="form-group-col-2">
 												<div class="form-label">公司人数：</div>
 												<div class="form-cont">
-													<input id="people_num" type="text" placeholder="请输入公司人数" class="form-control form-boxed">
+													<input id="people_num" type="number" placeholder="请输入公司人数" class="form-control form-boxed">
+												</div>
+											</div>
+											<div class="form-group-col-2">
+												<div class="form-label">管理员账号：</div>
+												<div class="form-cont">
+													<input id="_username" type="number" placeholder="请输入租户管理员账号" class="form-control form-boxed">
 												</div>
 											</div>
 											<div class="form-group-col-2" style="margin-left: 50px;">
@@ -104,25 +110,42 @@
 		</div>
 		<script type="text/javascript">
 	       $(function(){
-	       		function showMessage(state,mes){//使用vue.js
-	       			new Vue({
-		   				el:"#messageTitle",
-		   				data:{
-		   					show:state,
-		   					message:mes
-		   				}
-		   			});
+	       		function checkNull(modelType){
+	       			if(null == modelType || "undefined" == typeof(modelType) || "" == modelType){
+			            alert("输入不能为空");
+			            throw new Error("输入有误，js终止执行");
+			            return;
+			        }
 	       		}
 		        $("#tenantAddBut").click(function(){
+		        	var _applicant= $("#applicant").val();
+	    			var _domain= $("#domain").val();
+	    			var _company_name=  $("#company_name").val();
+	    			var _company_type= $("#company_type").val();
+	    			var _territory=  $("#territory").val();
+	    			var _url=  $("#url").val();
+	    			var _ceo=  $("#ceo").val();
+	    			var _people_num=  $("#people_num").val();
+	    			var _username=  $("#_username").val();
+		        	checkNull(_applicant);
+		        	checkNull(_domain);
+		        	checkNull(_company_name);
+		        	checkNull(_company_type);
+		        	checkNull(_territory);
+		        	checkNull(_url);
+		        	checkNull(_ceo);
+		        	checkNull(_people_num);
+		        	checkNull(_username);
 			    	var params ={
-		    			applicant: $("#applicant").val(),
-		    			domain: $("domain").val(),
-		    			company_name: $("#company_name").val(),
+		    			applicant: _applicant,
+		    			domain: _domain,
+		    			company_name: _company_name,
 		    			company_type: $("#company_type").val(),
-		    			territory: $("#territory").val(),
-		    			url: $("#url").val(),
-		    			ceo: $("#ceo").val(),
-		    			people_num: $("#people_num").val(),
+		    			territory: _territory,
+		    			url: _url,
+		    			ceo: _ceo,
+		    			people_num: _people_num,
+		    			username:_username,//该字段用来创建租户管理员
 		    			token:"manage"
 		    		};
 		    		var userAllInfo=$.session.get("loginUserAllInfo_manage");
@@ -141,11 +164,10 @@
 					    data: JSON.stringify(params),
 					    headers:_headers,
 					    success: function(data){
-					    	showMessage(true,"添加成功");
+					    	alert("添加成功");
 					        $(".form-control").val("");//清空输入框
 					    },
 					    error: function(res){
-					    	showMessage(true,"添加失败");
 			            	alert("添加失败");
 			            }
 					});

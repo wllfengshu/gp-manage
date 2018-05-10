@@ -30,12 +30,12 @@ router.get('/tenantAdd', function(req, res, next) {
   res.render('tenantAdd');
 });
 
-router.get('/recordIn', function(req, res, next) {
-  res.render('recordIn');
+router.get('/callIn', function(req, res, next) {
+  res.render('callIn');
 });
 
-router.get('/recordOut', function(req, res, next) {
-  res.render('recordOut');
+router.get('/callOut', function(req, res, next) {
+  res.render('callOut');
 });
 
 router.get('/reportOut', function(req, res, next) {

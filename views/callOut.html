@@ -24,7 +24,7 @@
 					<div class="page-wrap">
 						<section class="page-hd">
 							<header>
-								<h2 class="title"><i class="icon-columns"></i>租户信息查询</h2>
+								<h2 class="title"><i class="icon-inbox"></i>呼出记录管理</h2>
 								<p class="title-description">
 									悉心管理，成就梦想。
 								</p>
@@ -32,43 +32,51 @@
 							<hr>
 						</section>
 					</div>
-					
-					<div class="page-wrap"  id="havaTable"  style="margin-top:-40px">
+					<div  id="havaTable"  class="page-wrap" style="margin-top:-40px">
 						<table>
 							<tr>
 								<td>
 									<div class="form-group-col-2">
-										<div class="form-label">企业名称：</div>
+										<div class="form-label">公司域名：</div>
 										<div class="form-cont">
-											<input id="company_name" type="text" placeholder="请输入企业名称" class="form-control form-boxed">
+											<input id="domain" type="text" placeholder="请输出公司域名" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="form-group-col-2">
-										<div class="form-label">企业域名：</div>
+										<div class="form-label">坐席工号：</div>
 										<div class="form-cont">
-											<input id="domain" type="text" placeholder="请输入企业域名" class="form-control form-boxed">
+											<input id="_dnis" type="text" placeholder="请输出坐席工号" class="form-control form-boxed">
+										</div>
+									</div>
+								</td>
+								<td>
+									<div class="form-group-col-2">
+										<div class="form-label">顾客电话：</div>
+										<div class="form-cont">
+											<input id="_ani" type="text" placeholder="请输出顾客电话" class="form-control form-boxed">
 										</div>
 									</div>
 								</td>
 								<td>
 									<div class="form-group-col-2">
 										&nbsp;&nbsp;
-										<input  @click="queryBut(1)"  type="button" class="btn btn-warning" value="查询">
+										<input @click="queryBut(1)"  type="button" class="btn btn-warning" value="查询">
 									</div>
 								</td>
 							</tr>
 						</table>
-						<table  class="table table-bordered  mb-15">
+						<table   class="table table-bordered  mb-15">
 							<thead>
 								<tr>
 									<th>编号</th>
-									<th>企业名称</th>
-									<th>企业性质</th>
-									<th>企业领域</th>
+									<th>公司名称</th>
 									<th>公司域名</th>
-									<th>备注</th>
+									<th>顾客电话</th>
+									<th>坐席工号</th>
+									<th>呼出时间</th>
+									<th>结束时间</th>
 									<th>操作</th>
 								</tr>
 							</thead>
@@ -77,34 +85,19 @@
 									<tr v-for="(todo,index) in todos" class="trClass">
 										<td>{{index+1}}</td>
 										<td v-text="todo.company_name"></td>
-										<td v-text="todo.company_type"></td>
-										<td v-text="todo.territory"></td>
 										<td v-text="todo.domain"></td>
-										<td v-text="todo.applicant"></td>
+										<td v-text="todo.ani"></td>
+										<td v-text="todo.dnis"></td>
+										<td v-text="todo.start_time"></td>
+										<td v-text="todo.end_time"></td>
 										<td>
-											<a @click="viewBut(index)"  title="编辑" class="mr-5">编辑</a>
-											<a @click="removeBut(index)" title="删除">删除</a>
+											<a title="详情" disabled="true" class="mr-5">详情</a>
+											<a title="删除" disabled="true">删除</a>
 										</td>
 									</tr>
 								</template>
 							</tbody>
-						</table>	
-<div class="mask" id="mask"></div>
-<div class="dialog" id="dialog">
-	<div class="dialog-hd">
-		<strong class="lt-title">标题</strong>
-		<a class="rt-operate icon-remove JclosePanel" title="关闭"></a>
-	</div>
-	<div class="dialog-bd">
-		<!--start::-->
-		<p>这里是基础弹窗,可以定义文本信息，HTML信息这里是基础弹窗,可以定义文本信息，HTML信息。</p>
-		<!--end::-->
-	</div>
-	<div class="dialog-ft">
-		<button class="btn btn-info JyesBtn">确认</button>
-		<button class="btn btn-secondary JnoBtn">关闭</button>
-	</div>
-</div>
+						</table>
 						<div class="">
 							<div style="width: 50%;" class="dataTables_paginate paging_bootstrap pagination pagination-small">
 								<div >
@@ -132,7 +125,7 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-			$(function() {
+	        $(function() {
 				var goodsVue = new Vue({
 					el: "#havaTable",
 					data: {
@@ -171,7 +164,9 @@
 							var tenant_id = user["tenant_id"];
 							var _headers = {
 								"sessionId": sessionId,
-								"user_id": user_id
+								"user_id": user_id,
+								"tenant_id": tenant_id,
+								"call_type": "1"
 							}
 							return _headers;
 						},
@@ -189,18 +184,19 @@
 						},
 						sendQuery: function(_pageNo) { //发送ajax请求，获取指定条件的、带分页的数据
 							var _self = this;
-							var params ={
-				    			domain: $("#domain").val(),
-				    			company_name: $("#company_name").val(),
-				    			pageNo:_pageNo,
-				    			pageSize:10,
-				    			token:"manage"
-				    		};
+							var params = {
+								domain: $("#domain").val(),
+								ani:$("#_ani").val(),
+								dnis:$("#_dnis").val(),
+								pageNo: _pageNo,
+								pageSize: 10,
+								token: "manage"
+							};
 							var paramsGetStr = "?" + this.spliceGetStr(params);
 							//从session中获取数据，拼接到header中
 							var _headers = this.getDataBySession();
 							$.ajax({
-								url:'http://localhost:7000/tenant/'+paramsGetStr,
+								url: 'http://localhost:7006/record/' + paramsGetStr,
 								type: 'get',
 								dataType: 'text',
 								headers: _headers,
@@ -226,94 +222,6 @@
 						},
 						queryBut:function(_pageNo){//点击查询按钮
 							this.sendQuery(_pageNo);
-						},
-						viewBut:function(index){//查看指定某一条的数据
-							var _self = this;
-							_self._index=index;//把查看的是哪一条记录下来
-							//得到点击的是哪条数据
-							var _itemId=this.getItemId(_self,index);
-				    		//从session中获取数据，拼接到header中
-				    		var _headers=this.getDataBySession();
-				    		$.ajax({
-				    			url:'http://localhost:7000/tenant/'+_itemId,
-							    type:'get',
-							    dataType:'text',
-							    headers:_headers,
-							    success: function(_data){
-//							    	$("#mask").css("style","display: none;");//让弹框显示出来
-//							    	$("#dialog").css("style","display: none;");//让弹框显示出来
-							    	var infoRes=$.parseJSON(_data);//返回的数据，包含时间戳等
-						        	var infoData=infoRes["data"];//取到data
-						        	if(infoData==""){
-						        		alert("操作异常");
-						        	}else{
-//						        		$("#viewName").val(infoData["name"]); 
-//						        		$("#viewSex").val(infoData["sex"]); 
-//						        		$("#viewPhone").val(infoData["phone"]); 
-//						        		$("#viewEmail").val(infoData["email"]); 
-//						        		$("#viewAddress").val(infoData["address"]); 
-						        	}
-							    },
-							    error: function(res){
-					            	alert("查看失败");
-					            }
-							});
-						},
-						editBut:function(){//编辑按钮
-							var _self = this;
-							var index=_self._index;//拿到选择的哪一行
-							//得到点击的是哪条数据
-							var _itemId=this.getItemId(_self,index);
-				    		//从session中获取数据，拼接到header中
-				    		var _headers=this.getDataBySession();
-				    		//获取修改之前的数据
-				    		var _item=this.getItem(_self,index);
-				    		//整理新的数据
-				    		_item["name"]=$("#viewName").val();
-				    		_item["sex"]=$("#viewSex").val();
-				    		_item["phone"]=$("#viewPhone").val();
-				    		_item["email"]=$("#viewEmail").val();
-				    		_item["address"]=$("#viewAddress").val();
-				    		var params ={//不传token
-				    			customer:_item
-				    		};
-				    		$.ajax({
-							    url:'http://localhost:7000/tenant/'+_itemId,
-							    type:'put',
-							    dataType:'text',
-							    data: JSON.stringify(params),
-							    headers:_headers,
-							    success: function(_data){
-							    	alert("修改成功");
-							    	var _todosStr=JSON.stringify(_self.todos);
-									var _todosArr=JSON.parse(_todosStr);
-									_todosArr[index]=_item;
-							    	_self.todos = _todosArr;//更新显示的数据
-							    },
-							    error: function(res){
-					            	alert("编辑失败");
-					            }
-							});
-						},
-						removeBut:function(index){//删除按钮
-							var _self = this;
-							//得到点击的是哪条数据
-							var _itemId=this.getItemId(_self,index);
-				    		//从session中获取数据，拼接到header中
-				    		var _headers=this.getDataBySession();
-				    		$.ajax({
-							    url:'http://localhost:7000/tenant/'+_itemId,
-							    type:'delete',
-							    dataType:'text',
-							    headers:_headers,
-							    success: function(_data){
-							    	alert("删除成功");
-							    	_self.todos.splice(index,1);//第一个参数是下标，第二个参数是删除的数量 
-							    },
-							    error: function(res){
-					            	alert("删除失败");
-					            }
-							});
 						}
 					}
 				});
