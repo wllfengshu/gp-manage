@@ -68,7 +68,7 @@
 									<th>企业性质</th>
 									<th>企业领域</th>
 									<th>公司域名</th>
-									<th>备注</th>
+									<th>申请者</th>
 									<th>操作</th>
 								</tr>
 							</thead>
@@ -82,8 +82,8 @@
 										<td v-text="todo.domain"></td>
 										<td v-text="todo.applicant"></td>
 										<td>
-											<a @click="viewBut(index)"  title="编辑" class="mr-5">编辑</a>
-											<a @click="removeBut(index)" title="删除">删除</a>
+											<a disabled="disabled" @click="viewBut(index)"  title="编辑" class="mr-5">编辑</a>
+											<a disabled="disabled"  @click="removeBut(index)" title="删除">删除</a>
 										</td>
 									</tr>
 								</template>
@@ -309,6 +309,13 @@
 							    success: function(_data){
 							    	alert("删除成功");
 							    	_self.todos.splice(index,1);//第一个参数是下标，第二个参数是删除的数量 
+							    	//取删除之前的数据条数，再减一更新上去
+							    	var oldCount=$("#count").text();
+							    	var oldCountPage=$("#countPage").text();
+							    	var oldCountInt=parseInt(oldCount)-1;
+							    	var oldCountPageInt=parseInt(oldCountPage)-1;
+							    	$("#count").html(oldCountInt);
+						    		$("#countPage").html(oldCountPageInt);
 							    },
 							    error: function(res){
 					            	alert("删除失败");
